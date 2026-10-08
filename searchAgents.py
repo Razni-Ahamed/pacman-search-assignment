@@ -40,6 +40,7 @@ from game import Agent
 from game import Actions
 import util
 import time
+import itertools
 import search
 import pacman
 
@@ -370,8 +371,26 @@ def cornersHeuristic(state: Any, problem: CornersProblem):
     corners = problem.corners # These are the corner coordinates
     walls = problem.walls # These are the walls of the maze, as a Grid (game.py)
 
-    "*** YOUR CODE HERE ***"
-    return 0 # Default to trivial solution
+    # Relax the problem by ignoring walls: the cheapest tour (Manhattan
+    # distances) from Pacman through every unvisited corner. Dropping walls can
+    # only shorten distances, so this never overestimates (admissible), and it
+    # is 0 once every corner is visited.
+    position, visited = state
+    remaining = [c for c, v in zip(corners, visited) if not v]
+    if not remaining:
+        return 0
+
+    def manhattan(a, b):
+        return abs(a[0] - b[0]) + abs(a[1] - b[1])
+
+    best = float('inf')
+    for order in itertools.permutations(remaining):
+        total, here = 0, position
+        for corner in order:
+            total += manhattan(here, corner)
+            here = corner
+        best = min(best, total)
+    return best
 
 class AStarCornersAgent(SearchAgent):
     "A SearchAgent for FoodSearchProblem using A* and your foodHeuristic"
