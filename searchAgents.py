@@ -484,7 +484,11 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     """
     position, foodGrid = state
     "*** YOUR CODE HERE ***"
-    return 0
+    food = foodGrid.asList()
+    if not food:
+        return 0
+    # Pacman must at least walk to the farthest remaining dot (real maze distance)
+    return max(mazeDistance(position, dot, problem.startingGameState) for dot in food)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
