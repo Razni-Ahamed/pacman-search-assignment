@@ -295,15 +295,17 @@ class CornersProblem(search.SearchProblem):
         Returns the start state (in your state space, not the full Pacman state
         space)
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # State = (position, visited): visited is a tuple of 4 booleans, one per
+        # entry of self.corners. Small and hashable, no walls or GameState inside.
+        visited = tuple(self.startingPosition == corner for corner in self.corners)
+        return (self.startingPosition, visited)
 
     def isGoalState(self, state: Any):
         """
         Returns whether this search state is a goal state of the problem.
         """
-        "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+        # Goal: every corner has been visited.
+        return all(state[1])
 
     def getSuccessors(self, state: Any):
         """
