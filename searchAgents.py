@@ -327,7 +327,15 @@ class CornersProblem(search.SearchProblem):
             #   nextx, nexty = int(x + dx), int(y + dy)
             #   hitsWall = self.walls[nextx][nexty]
 
-            "*** YOUR CODE HERE ***"
+            (x, y), visited = state
+            dx, dy = Actions.directionToVector(action)
+            nextx, nexty = int(x + dx), int(y + dy)
+            if not self.walls[nextx][nexty]:
+                nextPos = (nextx, nexty)
+                # Entering a corner marks it visited; every step costs 1.
+                nextVisited = tuple(v or nextPos == corner
+                                    for v, corner in zip(visited, self.corners))
+                successors.append(((nextPos, nextVisited), action, 1))
 
         self._expanded += 1 # DO NOT CHANGE
         return successors
